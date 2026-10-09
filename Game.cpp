@@ -9,6 +9,30 @@ void Game::processEvents()
         {
             window.close();
         }
+
+        if (const auto* wheel = event->getIf<sf::Event::MouseWheelScrolled>())
+        {
+            if (wheel->delta > 0)
+            {
+                float newZoomLevel = zoomLevel * 0.9f;
+
+                if (newZoomLevel >= 0.5f)
+                {
+                    zoomLevel = newZoomLevel;
+                    view.zoom(0.9f);
+                }
+            }
+            else if (wheel->delta < 0)
+            {
+                float newZoomLevel = zoomLevel * 1.1f;
+
+                if (newZoomLevel <= 1.5f)
+                {
+                    zoomLevel = newZoomLevel;
+                    view.zoom(1.1f);
+                }
+            }
+        }
     }
 }
 
@@ -37,13 +61,17 @@ void Game::update(float deltaTime)
     }
 
     player.move(direction, deltaTime);
+
+    view.setCenter({ player.getPosition().x + 50, player.getPosition().y + 50 });
 }   
 
 void Game::render()
 {
     window.clear(sf::Color::White);
 
-    draw(window); // поменял player на  world
+    window.setView(view);
+
+    draw(window);
 
     window.display();
 }
@@ -66,6 +94,18 @@ void Game::run()
 void Game::draw(sf::RenderWindow& window)
 {
     playerView.setPosition(player.getPosition());
+
+    // Проверка работы камеры
+    sf::RectangleShape marker;
+    marker.setSize({ 50, 50 });
+    marker.setFillColor(sf::Color::Red);
+    marker.setPosition({ 300, 300 });
+    window.draw(marker);
+    /*
+    marker.setPosition({ 300, 300 }); — задаёт постоянные координаты объекта в игровом мире.
+    view.setCenter(player.getPosition()); — перемещает камеру вслед за игроком.
+    window.setView(view); — заставляет окно отображать мир через эту камеру.
+    window.draw(marker); — рисует ориентир с учётом положения камеры.*/
 
     playerView.draw(window);
 }

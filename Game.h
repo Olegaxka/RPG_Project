@@ -12,6 +12,8 @@ class Game
 	sf::Vector2f direction;
 	EntityView playerView;
 	Player player;
+	sf::View view;
+	float zoomLevel = 1.f;
 
 private:
 	void processEvents();
@@ -21,13 +23,14 @@ private:
 	void render();
 
 public:
-
-	Game() : window(sf::VideoMode({ 400, 400 }), L"RPG_Project", sf::Style::Default)
+	Game() : window(sf::VideoMode(sf::VideoMode::getDesktopMode()), L"RPG_Project", sf::Style::Default)
 	{
 		window.setVerticalSyncEnabled(true);
 
-		playerView.setSize({ 100, 50 });
+		playerView.setSize({ 100, 100 });
 		playerView.setColor(sf::Color::Black);
+
+		view.setSize({ 1280, 720 });
  	}
 		
    void run();
