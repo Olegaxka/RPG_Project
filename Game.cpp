@@ -1,7 +1,4 @@
 #include "Game.h"
-#include <iostream>
-
-
 
 void Game::processEvents() 
 {
@@ -17,14 +14,36 @@ void Game::processEvents()
 
 void Game::update(float deltaTime)
 {
-    timer += deltaTime;
+    // Сброс направления, то есть каждый кадр начинается с того что игрок не двигается
+    // а потом уже добавляется движение персонажа
+    direction = { 0, 0 };
+
+    // При нажатии кнопки персонаж перемещаеться в нужное направление
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
+    {
+        direction.x -= 1.f;
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
+    {
+        direction.x += 1.f;
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
+    {
+        direction.y -= 1.f;
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
+    {
+        direction.y += 1.f;
+    }
+
+    player.move(direction, deltaTime);
 }   
 
 void Game::render()
 {
     window.clear(sf::Color::White);
 
-    player.Draw(window);
+    draw(window); // поменял player на  world
 
     window.display();
 }
@@ -43,3 +62,11 @@ void Game::run()
         render();
     }
 }
+
+void Game::draw(sf::RenderWindow& window)
+{
+    playerView.setPosition(player.getPosition());
+
+    playerView.draw(window);
+}
+

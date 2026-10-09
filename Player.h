@@ -1,23 +1,23 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
-class Player
+#include "Entity.h"
+
+class Player 
+	: public Entity
 {
 private:
-
-	int speed = 1;
-	sf::RectangleShape playerShape; // квадрат
 	
+	float speed = 200.f;
+
 public:
-	Player() // конструктор с значениями квадрата
+	Player() 
 	{
-		playerShape.setSize(sf::Vector2f(100, 50));
-		playerShape.setFillColor(sf::Color::Black);
-		playerShape.setPosition(sf::Vector2f{ 10, 20 });
+		setPosition(10, 10);
 	}
 
-	void update();
-	void Draw(sf::RenderWindow& window); // доступ к основному окну через функцию
+	// position += direction * speed * deltaTime ( Формула скорости )
+	void move(sf::Vector2f direction, float deltaTime); 
 
 
 };
