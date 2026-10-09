@@ -10,6 +10,7 @@ void Game::processEvents()
             window.close();
         }
 
+        //ограничение на зум камеры
         if (const auto* wheel = event->getIf<sf::Event::MouseWheelScrolled>())
         {
             if (wheel->delta > 0)
@@ -32,6 +33,29 @@ void Game::processEvents()
                     view.zoom(1.1f);
                 }
             }
+        }
+
+        if (const auto* resized = event->getIf<sf::Event::Resized>())
+        {
+            // Здесь обработаем новый размер окна
+            if (resized->size.y > 0)
+            {
+                float aspectRatio =
+                    static_cast<float>(resized->size.x) /
+                    static_cast<float>(resized->size.y);
+
+                view.setSize({
+                    baseViewHeight * aspectRatio * zoomLevel,
+                    baseViewHeight * zoomLevel
+                    });
+
+                view.setViewport(sf::FloatRect({ 0.f, 0.f }, { 1.f, 1.f }));
+            }
+            /*обработчик изменения размера окна:
+            - проверяет, что высота окна больше нуля;
+            - рассчитывает соотношение сторон;
+            - обновляет размер камеры с учётом zoomLevel;
+            - задаёт отображение камеры на всё окно через setViewport().*/
         }
     }
 }

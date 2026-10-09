@@ -15,6 +15,9 @@ class Game
 	sf::View view;
 	float zoomLevel = 1.f;
 
+	//базовая высота камеры
+	float baseViewHeight = 720.f;
+
 private:
 	void processEvents();
 
